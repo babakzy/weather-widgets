@@ -11,7 +11,7 @@ onMounted(() => {
     .then((data) => {
       data = JSON.parse(data)
       console.log(data)
-      temperatureData.value = data.main.temp
+      temperatureData.value = (data.main.temp - 273.15).toFixed() + '°C' // Convert from Kelvin to Celsius
       descriptionData.value = data.weather[0].description
       cityData.value = data.sys.country + ', ' + data.name
     })
