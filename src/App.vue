@@ -2,12 +2,14 @@
 import wdiget1 from './components/widget1.vue'
 import wdiget2 from './components/widget2.vue'
 import wdiget3 from './components/widget3.vue'
+import getLocation from './use/geolocation'
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 let temperatureData = ref(0);
 let descriptionData = ref(" ");
 let cityData = ref(" ");
 onMounted(() => {
+  getLocation();
   fetch("https://api.openweathermap.org/data/2.5/weather?lat=38.0797&lon=46.3002&appid=97c3dcd58e47ab9b00baac7d422371d3")
     .then(x => x.text())
     .then((data) => {
