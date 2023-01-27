@@ -8,8 +8,18 @@ import { ref } from 'vue';
 let temperatureData = ref(0);
 let descriptionData = ref(" ");
 let cityData = ref(" ");
+
+function mycallback(position) {
+  alert("s")
+console.log(position)
+}
+function showError(position) {
+  alert("s")
+console.log('11')
+}
 onMounted(() => {
-  getLocation();
+ // getLocation(mycallback());
+  navigator.geolocation.getCurrentPosition(mycallback, showError);
   fetch("https://api.openweathermap.org/data/2.5/weather?lat=38.0797&lon=46.3002&appid=97c3dcd58e47ab9b00baac7d422371d3")
     .then(x => x.text())
     .then((data) => {
