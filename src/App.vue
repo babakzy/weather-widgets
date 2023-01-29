@@ -14,17 +14,25 @@ let lon = ref("");
 
 onBeforeMount(() => {
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(locationSuccessCallback, locationShowError);
-    console.log('1 navigator.geolocation onBeforeMount')
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }  
-
 })
 
 onMounted(() => {
 
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(locationSuccessCallback, locationShowError);
+    console.log('1 navigator.geolocation onMounted')
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }  
+  
+})
+
+
+function locationSuccessCallback(position) {
+
+  console.log('2 locationSuccessCallback')
+  lat.value = position.coords.latitude;
+  lon.value = position.coords.longitude
   console.log('3 lat value' + lat.value)
   fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + lat.value +  '&lon=' + lon.value + '&appid=97c3dcd58e47ab9b00baac7d422371d3')
     .then(x => x.text())
@@ -35,17 +43,9 @@ onMounted(() => {
       cityData.value = data.sys.country + ', ' + data.name
     })
 
-})
-
-
-function locationSuccessCallback(position) {
-
-  console.log('2 locationSuccessCallback')
-  lat.value = position.coords.latitude;
-  lon.value = position.coords.longitude
-
 }
 function locationShowError(error) {
+
   switch (error.code) {
     case error.PERMISSION_DENIED:
       alert("User denied the request for Geolocation.")
@@ -60,6 +60,7 @@ function locationShowError(error) {
       alert("An unknown error occurred.")
       break;
   }
+  
 }
 </script>
 
