@@ -5,12 +5,13 @@ import wdiget3 from './components/widget3.vue'
 import getLocation from './use/geolocation'
 import { onMounted } from 'vue';
 import { onBeforeMount } from 'vue';
-import { ref } from 'vue';
+import { ref , watch } from 'vue';
 let temperatureData = ref(0);
 let descriptionData = ref(" ");
 let cityData = ref(" ");
 let lat = ref("");
 let lon = ref("");
+let temperatureUnit = ref("");
 
 onBeforeMount(() => {
 
@@ -27,6 +28,18 @@ onMounted(() => {
   
 })
 
+watch (temperatureUnit,()=>{
+  console.log(temperatureUnit.value)
+  if (temperatureUnit.value == "kelvin"){
+    alert(temperatureData.value)
+    temperatureData.value = (Number(temperatureData.value) - 273.15).toFixed() // + '°C' // Convert from Kelvin to Celsius
+  
+  }
+  else{
+    alert(temperatureData.value)
+    temperatureData.value = (Number(temperatureData.value) + 273.15).toFixed() // + '°K' // Convert from Kelvin to Celsius
+  }
+})
 
 function locationSuccessCallback(position) {
 
@@ -38,12 +51,14 @@ function locationSuccessCallback(position) {
     .then(x => x.text())
     .then((data) => {
       data = JSON.parse(data)
-      temperatureData.value = (data.main.temp - 273.15).toFixed() + '°C' // Convert from Kelvin to Celsius
+      temperatureData.value = (data.main.temp - 273.15).toFixed() // + '°C' // Convert from Kelvin to Celsius
       descriptionData.value = data.weather[0].description
       cityData.value = data.sys.country + ', ' + data.name
     })
 
 }
+
+
 function locationShowError(error) {
 
   switch (error.code) {
@@ -70,12 +85,18 @@ function locationShowError(error) {
   </header>
   <main>
     <div class="container">
+      <select v-model="temperatureUnit" name="" id="">
+        <option value="kelvin">Kelvin</option>
+        <option value="celsius">Celsius</option>
+      </select>
+    </div>
+    <div class="container">
       <div class="column">
         <wdiget1 :temperature="temperatureData" :description="descriptionData" :city="cityData" />
       </div>
       <div class="column">
         <wdiget2 :temperature="temperatureData" :description="descriptionData" :city="cityData" />
-      </div>.
+      </div>
       <div class="column">
         <wdiget3 :temperature="temperatureData" :description="descriptionData" :city="cityData" />
       </div>
@@ -88,12 +109,11 @@ function locationShowError(error) {
 <style scoped>
 .container {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .column {
-
-  width: 50%;
   padding: 50px;
 }
 

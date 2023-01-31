@@ -28,6 +28,7 @@ const props = defineProps({
 .temperature{
   flex-grow: 1;
   text-align: center;
+  padding: 20px;
 }
 .info{
   background-color: rgb(164, 183, 207);
